@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RetainIQ: Predict Attrition. Protect Talent.</title>
+<style>
+:root{--bg:#f2f6f8;--surf:#fff;--ink:#12263a;--mute:#5b6b7b;--line:#d5dee5;--teal:#0e7c86;--tealsoft:#d9eef0;--risk:#c8453b;--risksoft:#f8e1de}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1a26;--surf:#15263a;--ink:#e6eef5;--mute:#93a5b6;--line:#26405a;--teal:#4cc2cc;--tealsoft:#123a44;--risk:#ef7a6f;--risksoft:#3d1f22}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav .wrap{display:flex;gap:18px;align-items:center;overflow-x:auto;padding-top:12px;padding-bottom:12px;white-space:nowrap}
+nav b{font-size:18px;margin-right:auto;color:var(--teal)}
+nav a{color:var(--mute);text-decoration:none;font-size:14px}
+nav a:hover,nav a:focus-visible{color:var(--ink)}
+h1{font:700 clamp(32px,6vw,56px)/1.08 Georgia,serif;margin:0 0 16px;max-width:16em}
+h2{font:700 clamp(24px,4vw,34px)/1.15 Georgia,serif;margin:0 0 10px}
+h3{margin:0 0 6px;font-size:17px}
+section{padding:56px 0;border-top:1px solid var(--line)}
+.lead{color:var(--mute);max-width:42em}
+.hero{padding:64px 0 48px}
+.stats{display:flex;gap:36px;flex-wrap:wrap;margin-top:28px}
+.stats div{font-size:14px;color:var(--mute)}
+.stats strong{display:block;font:700 38px/1 Georgia,serif;color:var(--ink)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:22px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:18px}
+.card p{margin:0;color:var(--mute);font-size:15px}
+.card .f{color:var(--teal);font-weight:600;font-size:14px;margin-bottom:4px}
+ul.plain{padding-left:20px;margin:8px 0}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 12px}
+input,select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surf);color:var(--ink)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surf)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--mute);font-weight:600}
+tr:last-child td{border-bottom:0}
+.yes{color:var(--risk);font-weight:600}.no{color:var(--teal);font-weight:600}
+.bars{margin-top:18px;display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:minmax(120px,200px) 1fr 56px;gap:12px;align-items:center;font-size:14px}
+.track{position:relative;height:18px;background:var(--tealsoft);border-radius:4px}
+.fill{height:100%;border-radius:4px;background:var(--teal)}
+.fill.hi{background:var(--risk)}
+.avg{position:absolute;top:-4px;bottom:-4px;border-left:2px dashed var(--ink)}
+.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.sel{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surf);color:var(--ink);padding:7px 14px;border-radius:6px}
+button[aria-pressed=true]{background:var(--teal);color:var(--bg);border-color:var(--teal)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.note{font-size:13px;color:var(--mute);margin-top:12px}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:99px;background:var(--tealsoft);color:var(--teal);margin-left:6px;vertical-align:middle}
+.tag.sim{background:var(--risksoft);color:var(--risk)}
+.two{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));margin-top:22px}
+.lev{display:grid;grid-template-columns:1fr 60px;gap:4px 10px;margin-bottom:14px;font-size:14px}
+.lev input{grid-column:1/-1;padding:0;accent-color:var(--teal);width:100%}
+.big{font:700 40px/1 Georgia,serif}
+.cmp{display:flex;gap:32px;margin:12px 0}
+.cmp small{display:block;color:var(--mute);font:14px system-ui}
+.heat td.c{font-variant-numeric:tabular-nums}
+.good{background:var(--tealsoft)}.bad{background:var(--risksoft)}
+footer{padding:36px 0;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><b>RetainIQ</b><a href="#problem">Problem</a><a href="#dataset">Dataset</a><a href="#eda">EDA</a><a href="#heatmap">Heatmap</a><a href="#simulator">Simulator</a><a href="#actions">Actions</a><a href="#tech">Tech stack</a></div></nav>
+
+<header class="hero wrap" id="hero">
+<p class="lead" style="margin:0 0 10px">Don't wait for employees to leave. Understand why they might.</p>
+<h1>Predict attrition. Protect talent. Build stronger teams.</h1>
+<p class="lead">Turn employee data into workforce intelligence. Find hidden attrition patterns and build retention strategies grounded in the IBM HR Analytics dataset.</p>
+<div class="stats">
+<div><strong>1,470</strong>Employees</div>
+<div><strong>16.1%</strong>Attrition rate</div>
+<div><strong>3.0×</strong>Overtime risk</div>
+</div>
+<p class="note">An independent data analytics project by Umama Ahmed. Source: retainiqhrattrition.lovable.app</p>
+</header>
+
+<section id="problem"><div class="wrap">
+<h2>The hidden cost of employee attrition</h2>
+<p class="lead">Traditional HR reporting counts resignations after institutional knowledge has already left. Organizations need earlier visibility into the patterns that signal retention risk.</p>
+<div class="two">
+<div class="card"><h3>Why organizations lose talent</h3><ul class="plain">
+<li>Job dissatisfaction and low role fulfilment</li><li>Pay below market</li><li>Limited career growth and promotion stalls</li><li>Excessive workload and persistent overtime</li><li>Poor work-life balance and burnout</li><li>Lack of engagement and recognition</li><li>Workplace environment and managerial friction</li></ul></div>
+<div class="card"><h3>What RetainIQ does</h3><p>Instead of waiting for exit interviews, RetainIQ surfaces statistical drivers of attrition across pay, overtime, tenure and satisfaction.</p>
+<ul class="plain"><li>Audits 1,470 records across 35 HR dimensions</li><li>Isolates cohorts with elevated turnover</li><li>Maps job, environment and work-life scores</li><li>Benchmarks Sales, R&amp;D and HR departments</li><li>Highlights key risk indicators</li><li>Lets leaders simulate retention interventions</li></ul></div>
+</div></div></section>
+
+<section id="dataset"><div class="wrap">
+<h2>IBM HR Analytics employee attrition <span class="tag">Actual IBM HR data</span></h2>
+<p class="lead">A public, fictional benchmark dataset created by IBM data scientists: 1,470 records, 35 original attributes, no missing values. Average monthly income is about $6,500; incomes range from $1,009 to $19,999.</p>
+<div class="tools">
+<input id="q" type="search" placeholder="Search role or department" aria-label="Search role or department">
+<select id="f" aria-label="Filter by attrition"><option value="">All</option><option>Yes</option><option>No</option></select>
+</div>
+<div class="tw"><table id="tbl"><thead><tr><th>ID</th><th>Age</th><th>Gender</th><th>Department</th><th>Job role</th><th>Income</th><th>Years</th><th>Job sat.</th><th>WLB</th><th>Overtime</th><th>Perf.</th><th>Attrition</th></tr></thead><tbody></tbody></table></div>
+<p class="note">A small sample of records. Employee ID matches the original EmployeeNumber field.</p>
+<div class="grid">
+<div class="card"><h3>Cleaning workflow</h3><p>Verified 1,470 unique IDs with zero nulls; removed constant columns (EmployeeCount, Over18, StandardHours).</p></div>
+<div class="card"><h3>Encoding</h3><p>Mapped ordinal scales (Job Satisfaction, Work-Life Balance) and encoded categorical fields for SQL and Python.</p></div>
+<div class="card"><h3>Feature engineering</h3><p>Created age cohorts, income brackets, tenure tiers and promotion-gap bands to surface non-linear patterns.</p></div>
+<div class="card"><h3>Validation and export</h3><p>Cross-checked SQL aggregations against pandas summaries; exported clean tables for Power BI and ML.</p></div>
+</div></div></section>
+
+<section id="eda"><div class="wrap">
+<h2>What drives employee attrition <span class="tag">Actual IBM HR data</span></h2>
+<p class="lead">Each bar shows the share of a group who left. The dashed line is the company-wide average of 16.12%.</p>
+<div class="sel" role="group" aria-label="Choose a view">
+<button aria-pressed="true" data-v="dept">Department</button>
+<button aria-pressed="false" data-v="key">Key splits</button>
+</div>
+<div class="bars" id="bars"></div>
+<p class="note" id="edaNote"></p>
+</div></section>
+
+<section id="heatmap"><div class="wrap">
+<h2>Where satisfaction runs hot and cold <span class="tag">Actual IBM HR data</span></h2>
+<p class="lead">Average survey scores (1–4) alongside overtime and attrition, by department.</p>
+<div class="tw heat" style="margin-top:20px"><table style="min-width:620px"><thead><tr><th>Group</th><th>Job satisfaction</th><th>Environment sat.</th><th>Work-life balance</th><th>Overtime %</th><th>Attrition %</th></tr></thead><tbody>
+<tr><td>Sales</td><td class="c good">2.75</td><td class="c">2.68</td><td class="c">2.82</td><td class="c">28.7%</td><td class="c bad">20.6%</td></tr>
+<tr><td>Research &amp; Development</td><td class="c good">2.73</td><td class="c good">2.74</td><td class="c">2.73</td><td class="c">28.2%</td><td class="c good">13.8%</td></tr>
+<tr><td>Human Resources</td><td class="c bad">2.60</td><td class="c">2.68</td><td class="c good">2.92</td><td class="c">27%</td><td class="c bad">19%</td></tr>
+</tbody></table></div>
+<p class="note">Satisfaction averages differ only slightly between groups, yet attrition varies widely. Pay, overtime and early tenure explain more of the gap than survey scores alone.</p>
+<h3 style="margin-top:28px">Risk radar <span class="tag sim">Illustrative / simulated</span></h3>
+<div class="card" style="margin-top:10px"><p><b style="color:var(--ink)">EMP-004</b>, Laboratory Technician, R&amp;D: simulated score <b style="color:var(--risk)">78 / 100 (high)</b>. Income $2,090/mo, overtime yes, tenure 0.8 years, job satisfaction 2 / 4. Contributing patterns: active overtime, below-median income, early-tenure onboarding window.</p></div>
+<p class="note">Profiles and scores are simulated for demonstration. A high score never means an employee will resign; it flags patterns worth a supportive conversation. Illustrative feature weights: overtime 24%, income 21%, tenure 16%, age cohort 14%, job role 11%, job satisfaction 8%, work-life balance 6%. No model metrics are published yet; the baseline to beat is 83.9% accuracy from always predicting "stays".</p>
+</div></section>
+
+<section id="simulator"><div class="wrap">
+<h2>What if we changed something? <span class="tag sim">Illustrative / simulated</span></h2>
+<p class="lead">Move the sliders to explore hypothetical policy changes. The baseline is the real 16.12% attrition rate; the scenario uses stated assumptions, not a trained model.</p>
+<div class="two">
+<div class="card" id="levers"></div>
+<div class="card"><h3>Baseline vs scenario</h3>
+<div class="cmp"><div><small>Baseline</small><span class="big">16.1%</span></div><div><small>Scenario</small><span class="big" id="scn" style="color:var(--teal)">16.1%</span></div><div><small>People retained (est.)</small><span class="big" id="ret">+0</span></div></div>
+<div class="bars" id="red"></div>
+<button id="reset" style="margin-top:16px">Reset</button>
+<p class="note">Each lever's maximum effect is a small share of the gap seen in the data (for example overtime 30.5% vs 10.4%). Correlation is not causation; these are scenario assumptions for discussion, not predictions.</p></div>
+</div></div></section>
+
+<section id="actions"><div class="wrap">
+<h2>Turning findings into action</h2>
+<div class="grid">
+<div class="card"><div class="f">Compensation: under $3k/month, 28.6% attrition vs 8.9% above $10k</div><p>Review pay bands for entry-level roles such as Lab Technicians and Sales Reps.</p></div>
+<div class="card"><div class="f">Workload: overtime 30.5% vs 10.4%</div><p>Monitor recurring overtime and rebalance staffing in overloaded teams.</p></div>
+<div class="card"><div class="f">Career development: 0–2 years tenure, 29.8%</div><p>Structured onboarding, mentoring and clear 12–24 month growth paths.</p></div>
+<div class="card"><div class="f">Engagement: age 18–25, 35.8%</div><p>Rotation programmes and regular pulse surveys for early-career cohorts.</p></div>
+<div class="card"><div class="f">Recognition: low job satisfaction, 22.8% vs 11.3%</div><p>Peer and manager recognition tied to visible contributions.</p></div>
+<div class="card"><div class="f">Managerial support: Sales Representatives, 39.8%</div><p>Coaching for frontline sales managers and realistic target-setting.</p></div>
+<div class="card"><div class="f">Work-life balance: "bad" rating, 31.3%</div><p>Flexible scheduling and protected time off where balance scores are lowest.</p></div>
+</div></div></section>
+
+<section id="tech"><div class="wrap">
+<h2>The analytics pipeline</h2>
+<div class="grid">
+<div class="card"><h3>Microsoft Excel</h3><p>Data cleaning</p></div>
+<div class="card"><h3>SQL</h3><p>Data querying and analysis</p></div>
+<div class="card"><h3>Python</h3><p>EDA and predictive modelling</p></div>
+<div class="card"><h3>Power BI</h3><p>Interactive dashboards</p></div>
+<div class="card"><h3>Machine learning</h3><p>Attrition prediction</p></div>
+</div>
+<h2 style="margin-top:40px">Better insights. Stronger workforce.</h2>
+<p class="lead">Across 1,470 employees, attrition clusters around overtime, low pay, early tenure and specific roles. Seeing these patterns early lets organizations weigh retention options with evidence, supporting people rather than labelling them.</p>
+</div></section>
+
+<footer><div class="wrap">Concept, analytics and website by Umama Ahmed. Data: IBM HR Analytics Employee Attrition &amp; Performance (fictional dataset by IBM data scientists). Content compiled from retainiqhrattrition.lovable.app.</div></footer>
+
+<script>
+const rows=[[1,41,"Female","Sales","Sales Executive",5993,6,4,1,"Yes",3,"Yes"],[2,49,"Male","Research & Development","Research Scientist",5130,10,2,3,"No",4,"No"],[4,37,"Male","Research & Development","Laboratory Technician",2090,0,3,3,"Yes",3,"Yes"],[5,33,"Female","Research & Development","Research Scientist",2909,8,3,3,"Yes",3,"No"],[7,27,"Male","Research & Development","Laboratory Technician",3468,2,2,3,"No",3,"No"],[19,28,"Male","Research & Development","Laboratory Technician",2028,4,3,3,"Yes",3,"Yes"],[27,36,"Male","Sales","Sales Representative",3407,5,1,3,"No",3,"Yes"],[31,34,"Female","Research & Development","Manufacturing Director",6854,10,4,3,"No",3,"No"],[42,32,"Female","Sales","Sales Executive",4614,4,2,2,"Yes",3,"Yes"],[103,46,"Male","Human Resources","Human Resources",5021,7,3,3,"No",3,"No"],[133,24,"Female","Human Resources","Human Resources",2293,1,1,2,"Yes",3,"Yes"],[165,52,"Female","Research & Development","Research Director",19094,18,4,3,"No",4,"No"]];
+const tb=document.querySelector("#tbl tbody"),q=document.getElementById("q"),f=document.getElementById("f");
+function draw(){const t=q.value.toLowerCase(),a=f.value;tb.innerHTML=rows.filter(r=>(!a||r[11]===a)&&(!t||(r[3]+" "+r[4]).toLowerCase().includes(t))).map(r=>"<tr>"+r.map((v,i)=>i===5?"<td>$"+v.toLocaleString("en-US")+"</td>":i===11?'<td class="'+(v==="Yes"?"yes":"no")+'">'+v+"</td>":"<td>"+v+"</td>").join("")+"</tr>").join("")||'<tr><td colspan="12">No records match. Try a different search or filter.</td></tr>'}
+q.oninput=f.onchange=draw;draw();
+
+const AVG=16.12;
+const views={dept:{d:[["Sales",20.6],["Human Resources",19],["Research & Development",13.8]],n:"Sales loses 20.6% of staff vs 13.8% in R&D. Counts: Sales 92 of 446, HR 12 of 63, R&D 133 of 961."},
+key:{d:[["Sales Representatives",39.8],["Age 18–25",35.8],["Bad work-life balance",31.3],["Overtime: yes",30.5],["Tenure 0–2 years",29.8],["Income under $3k/month",28.6],["Low job satisfaction",22.8],["Low satisfaction comparison group",11.3],["Overtime: no",10.4],["Income above $10k/month",8.9]],n:"Selected splits quoted in the project's findings. The original site charts nine lenses; only these values were published in the page text."}};
+const bars=document.getElementById("bars");
+function view(k){const v=views[k],m=45;bars.innerHTML=v.d.map(([l,p])=>'<div class="bar"><span>'+l+'</span><div class="track"><div class="fill'+(p>AVG?" hi":"")+'" style="width:'+p/m*100+'%"></div><i class="avg" style="left:'+AVG/m*100+'%"></i></div><span>'+p+'%</span></div>').join("");document.getElementById("edaNote").textContent=v.n;document.querySelectorAll(".sel button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===k))}
+document.querySelectorAll(".sel button").forEach(b=>b.onclick=()=>view(b.dataset.v));view("dept");
+
+const L=[["Salary increase (lowest earners)",30,"%",1.5],["Workload reduction",30,"%",1.0],["Overtime staff moved off overtime",50,"%",2.0],["Job satisfaction uplift",1,"pts",1.0,.1],["Career development coverage",100,"%",1.2],["Work-life balance uplift",1,"pts",0.8,.1]];
+const lv=document.getElementById("levers");
+lv.innerHTML=L.map((l,i)=>'<div class="lev"><label for="s'+i+'">'+l[0]+'</label><output id="o'+i+'">0'+l[2]+'</output><input type="range" id="s'+i+'" min="0" max="'+l[1]+'" step="'+(l[4]||1)+'" value="0"></div>').join("");
+const ins=L.map((_,i)=>document.getElementById("s"+i));
+function sim(){let tot=0;const parts=ins.map((s,i)=>{const v=+s.value;document.getElementById("o"+i).textContent=v+L[i][2];const r=v/L[i][1]*L[i][3];tot+=r;return r});
+document.getElementById("scn").textContent=(AVG-tot).toFixed(1)+"%";document.getElementById("ret").textContent="+"+Math.round(tot/100*1470);
+document.getElementById("red").innerHTML=L.map((l,i)=>'<div class="bar" style="grid-template-columns:minmax(110px,170px) 1fr 56px"><span>'+l[0].split(" (")[0]+'</span><div class="track"><div class="fill" style="width:'+parts[i]/2*100+'%"></div></div><span>−'+parts[i].toFixed(1)+'</span></div>').join("")}
+ins.forEach(s=>s.oninput=sim);document.getElementById("reset").onclick=()=>{ins.forEach(s=>s.value=0);sim()};sim();
+</script>
+</body>
+</html>
